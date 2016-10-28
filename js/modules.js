@@ -38,3 +38,26 @@ CORE.create_module("search-box", function (sandbox) {
         }
     };
 });
+
+CORE.create_module("filters-bar", function (sandbox) {
+    var filters;
+
+    return {
+        init: function () {
+            filters = sandbox.find('a');
+            sandbox.addEvent(filters, "click", this.filterProducts);
+        },
+
+        destroy: function () {
+            sandbox.removeEvent(filters, "click", this,filterProducts);
+            filters = null;
+        },
+
+        filterProducts: function (e) {
+            sandbox.notify({
+                type: 'change-filter',
+                data: e.currentTarget.innerHTML
+            });
+        }
+    };
+});
