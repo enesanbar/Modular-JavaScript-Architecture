@@ -49,7 +49,7 @@ CORE.create_module("filters-bar", function (sandbox) {
         },
 
         destroy: function () {
-            sandbox.removeEvent(filters, "click", this,filterProducts);
+            sandbox.removeEvent(filters, "click", this.filterProducts);
             filters = null;
         },
 
@@ -60,4 +60,91 @@ CORE.create_module("filters-bar", function (sandbox) {
             });
         }
     };
+});
+
+CORE.create_module("products-panel", function (sandbox) {
+    var products;
+
+    function eachProduct(fn) {
+        var i = 0, product;
+        for( ; product = products[i++] ; ) {
+            fn(product);
+        }
+    }
+
+    // reset the styling of the products
+    function reset() {
+        eachProduct(function (product) {
+            product.style.opcity = '1';
+        })
+    }
+
+    return {
+        init: function (sandbox) {
+            var that = this;
+
+            products = sandbox.find("li");
+            sandbox.listen({
+                'change-filter': this.change_filter,
+                'reset-filter': this.reset,
+                'perform-search': this.search,
+                'quit-search': this.reset
+            });
+
+            eachProduct(function (product) {
+                sandbox.addEvent(product, 'click', that.addToCart);
+            })
+        },
+
+        destroy: function () {
+            var that = this;
+            eachProduct(function (product) {
+                sandbox.removeEvent(product, 'click', that.addToCart);
+            });
+
+            sandbox.ignore([
+                'change-filter',
+                'reset-filter',
+                'perform-search',
+                'quit-search'
+            ]);
+        },
+
+        reset: reset,
+
+        change_filter: function (filter) {
+            reset();
+            eachProduct(function (product) {
+                // reduce the opacity of the other products to stand out the filtered ones
+                if (product.getAttribute("data-8088-keyword").toLowerCase().indexOf(filter.toLowerCase()) < 0) {
+                        product.style.opacity = '0.2';
+                }
+            });
+        },
+
+        search: function (query) {
+            query = query.toLowerCase();
+            eachProduct(function (product) {
+                // reduce the opacity of the other products to stand out the filtered ones
+                if (product.getElementsByTagName('p')[0].innerHTML.toLowerCase().indexOf(query.toLowerCase()) < 0) {
+                    product.style.opacity = '0.2';
+                }
+            });
+
+        },
+        
+        addToCard: function (e) {
+            var li = e.currentTarget;
+
+            sandbox.notify({
+                type: 'add-item',
+                data: {
+                    id: li.id,
+                    name: li.getElementsByTagName('p')[0].innerHTML,
+                    // product with the id of 1 will be $1
+                    price: parseInt(li.id, 10)
+                }
+            });
+        }
+    }
 });
