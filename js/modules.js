@@ -5,8 +5,8 @@ CORE.create_module("search-box", function (sandbox) {
         init: function () {
             // query will return a jQuery object with the matched results,
             // so we get the 0th element to get the search box element
-            input = sandbox.find("#search-input")[0];
-            button = sandbox.find("#search-button")[0];
+            input = sandbox.find("#search_input")[0];
+            button = sandbox.find("#search_button")[0];
             reset = sandbox.find("#quit_search")[0];
 
             sandbox.addEvent(button, "click", this.handleSearch);
