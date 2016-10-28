@@ -148,3 +148,62 @@ CORE.create_module("products-panel", function (sandbox) {
         }
     }
 });
+
+CORE.create_module("shopping-cart", function (sandbox) {
+    var cart, cartItems;
+
+    return {
+        init: function () {
+            cart = sandbox.find('ul')[0];
+            cartItems = {};
+
+            sandbox.listen({
+                'add-item': this.addItem
+            });
+        },
+
+        destroy: function () {
+            cart = cartItems = null;
+            sandbox.ignore(['add-item']);
+        },
+
+        addItem: function (product) {
+            var entry;
+            entry = sandbox.find('#cart-' + product.id + ' .quantity')[0];
+            // if the product added is already in the cart, increment the quantity
+            if (entry) {
+                entry.innerHTML = parseInt(entry.innerHTML, 10) + 1;
+                cartItems[product.id]++
+            } else {
+                /*
+                 <li id="cart-1", class="cart-entry">
+                     <span class="product-name">Name<span>
+                     <span class="quantity">1<span>
+                     <span class="price">$1<span>
+                 </li>
+                 */
+                entry = sandbox.create_element("li", {
+                    'id': "cart-" + product.id,
+                    'class': 'cart-entry',
+                    'children': [
+                        sandbox.create_element("span", {
+                            'class': 'product_name',
+                            'text': product.name
+                        }),
+                        sandbox.create_element("span", {
+                            'class': 'quantity',
+                            'text': '1'
+                        }),
+                        sandbox.create_element("span", {
+                            'class': 'price',
+                            'text': '$' + product.id.toFixed(2)
+                        })
+                    ]
+                });
+
+                cart.appendChild(entry);
+                cartItems[product.id] = 1;
+            }
+        }
+    }
+});
