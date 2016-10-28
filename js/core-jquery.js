@@ -1,10 +1,6 @@
 var CORE = (function () {
     var moduleData = {};
 
-    to_string = function (anything) {
-        return Object.prototype.toString.call(anything);
-    };
-
     var debug = true;
 
     return {
@@ -27,7 +23,7 @@ var CORE = (function () {
                     this.log(1, "Module '" + moduleId + "' Registration : FAILED : instance has no init or destroy functions");
                 }
             } else {
-                this.log(1, "Module '" + to_string(moduleId) + "' Registration : FAILED : one or more arguments are or incorrect type");
+                this.log(1, "Module '" + moduleId + "' Registration : FAILED : one or more arguments are or incorrect type");
             }
         },
 
@@ -68,9 +64,9 @@ var CORE = (function () {
         },
 
         register_events: function (events, module) {
-            if (this.is_obj(events) && mod) {
+            if (this.is_obj(events) && module) {
                 if (moduleData[module]) {
-                    moduleData[mod].events = events;
+                    moduleData[module].events = events;
                 } else {
                     this.log(1, "Event Registration for Module '" + module + "': FAILED : module does not exist or has not been created yet");
                 }
@@ -80,13 +76,14 @@ var CORE = (function () {
         },
 
         trigger_event: function (event) {
-            var mod;
-            if (mod in moduleData) {
-                if (moduleData.hasOwnProperty(mod)) {
-                    mod = moduleData[mod];
+            console.log('triggering event...');
+            var module;
+            for (module in moduleData) {
+                if (moduleData.hasOwnProperty(module)) {
+                    module = moduleData[module];
                     // if the current module is listening for this event, execute its handles function
-                    if (mod.events && mod.events[event.type]) {
-                        mod.events[event.type](event.data);
+                    if (module.events && module.events[event.type]) {
+                        module.events[event.type](event.data);
                     }
                 }
             }
@@ -113,7 +110,7 @@ var CORE = (function () {
                 if (context && context.find) {
                     jqEls = context.find(selector);
                 } else {
-                    jQuery(selector);
+                    jqEls = jQuery(selector);
                 }
 
                 ret = jqEls.get();

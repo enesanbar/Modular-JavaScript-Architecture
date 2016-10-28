@@ -75,14 +75,12 @@ CORE.create_module("products-panel", function (sandbox) {
     // reset the styling of the products
     function reset() {
         eachProduct(function (product) {
-            product.style.opcity = '1';
+            product.style.opacity = '1';
         })
     }
 
     return {
-        init: function (sandbox) {
-            var that = this;
-
+        init: function () {
             products = sandbox.find("li");
             sandbox.listen({
                 'change-filter': this.change_filter,
@@ -90,9 +88,9 @@ CORE.create_module("products-panel", function (sandbox) {
                 'perform-search': this.search,
                 'quit-search': this.reset
             });
-
+            var addToCard = this.addToCard;
             eachProduct(function (product) {
-                sandbox.addEvent(product, 'click', that.addToCart);
+                sandbox.addEvent(product, 'click', addToCard);
             })
         },
 
@@ -123,6 +121,7 @@ CORE.create_module("products-panel", function (sandbox) {
         },
 
         search: function (query) {
+            reset();
             query = query.toLowerCase();
             eachProduct(function (product) {
                 // reduce the opacity of the other products to stand out the filtered ones
@@ -136,6 +135,7 @@ CORE.create_module("products-panel", function (sandbox) {
         addToCard: function (e) {
             var li = e.currentTarget;
 
+            // notifying item added to the card
             sandbox.notify({
                 type: 'add-item',
                 data: {
@@ -168,12 +168,15 @@ CORE.create_module("shopping-cart", function (sandbox) {
         },
 
         addItem: function (product) {
-            var entry;
+            var entry, price;
             entry = sandbox.find('#cart-' + product.id + ' .quantity')[0];
             // if the product added is already in the cart, increment the quantity
             if (entry) {
                 entry.innerHTML = parseInt(entry.innerHTML, 10) + 1;
-                cartItems[product.id]++
+                cartItems[product.id]++;
+                price = sandbox.find('#cart-' + product.id + ' .price')[0];
+                var newPrice = cartItems[product.id] * product.price;
+                price.innerHTML = '$' + newPrice.toFixed(2);
             } else {
                 /*
                  <li id="cart-1", class="cart-entry">
@@ -196,7 +199,7 @@ CORE.create_module("shopping-cart", function (sandbox) {
                         }),
                         sandbox.create_element("span", {
                             'class': 'price',
-                            'text': '$' + product.id.toFixed(2)
+                            'text': '$' + product.price.toFixed(2)
                         })
                     ]
                 });
@@ -207,3 +210,5 @@ CORE.create_module("shopping-cart", function (sandbox) {
         }
     }
 });
+
+CORE.start_all();

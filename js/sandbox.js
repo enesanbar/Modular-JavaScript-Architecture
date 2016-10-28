@@ -41,19 +41,20 @@ var Sandbox = {
                     // if the element has its own elements, create them
                     if (config.children && core.is_arr(config.children)) {
                         i = 0;
-                        while(child = config.children[0]) {
+                        while(child = config.children[i]) {
                             el.appendChild(child);
                             i++;
                         }
 
                         delete config.children;
-                        if (config.text) {
-                            el.appendChild(document.createTextNode(config.text));
-                            delete config.text;
-                        }
-                        core.dom.apply_attrs(el, config);
-                        return el;
                     }
+
+                    if (config.text) {
+                        el.appendChild(document.createTextNode(config.text));
+                        delete config.text;
+                    }
+                    core.dom.apply_attrs(el, config);
+                    return el;
                 }
             }
         };

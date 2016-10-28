@@ -28,15 +28,15 @@ h1, #search-box, #filters-bar {
     color:#474747;
 }
 
-#product-panel {
+#products-panel {
     float:left;
     width: 588px;
 }
-#product-panel ul {
+#products-panel ul {
     margin:0;
     padding:0;
 }
-#product-panel li {
+#products-panel li {
     list-style-type:none;
     display:inline-block;
     text-align:center;
@@ -45,7 +45,7 @@ h1, #search-box, #filters-bar {
     padding:15px;
     margin:10px;
 }
-#product-panel li p {
+#products-panel li p {
     margin:10px 0 0 0;
 }
 
