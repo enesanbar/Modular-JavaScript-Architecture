@@ -17,13 +17,13 @@ var Sandbox = {
 
             notify: function (event) {
                 if (core.is_obj(event) && event.type) {
-                    core.triggerEvent(event);
+                    core.trigger_event(event);
                 }
             },
 
             listen: function (events) {
                 if (core.is_obj(events)) {
-                    core.register(events, module_selector);
+                    core.register_events(events, module_selector);
                 }
             },
 
