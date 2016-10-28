@@ -1,0 +1,11 @@
+{
+  "name": "Store App",
+  "version": "0.0.0",
+  "authors": [
+    "Enes Anbar <enesanbar@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.1.1"
+  }
+}
